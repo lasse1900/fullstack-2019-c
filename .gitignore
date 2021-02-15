@@ -4,7 +4,7 @@
 /node_modules
 node_modules/
 jeesi/
-jeesi2/
+jeesi_backend/
 /.pnp
 .pnp.js
 
