@@ -1,13 +1,5 @@
 import React from "react";
-
-interface CoursePart {
-  name: string;
-  exerciseCount: number;
-}
-
-interface ContentProps {
-  courseParts: CoursePart[];
-}
+import { ContentProps } from '../utils/Courses';
 
 const Content: React.FC<ContentProps> = (props) => {
   const { courseParts } = props;
