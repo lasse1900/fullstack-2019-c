@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NewPatient, Gender } from "./types";
 
 const isString = (text: any): text is string => {
@@ -52,8 +56,7 @@ const isGender = (param: any): param is Gender => {
   return Object.values(Gender).includes(param);
 };
 
-
-const toNewPatientEntry = (object: any): NewPatient => {
+export const toNewPatientEntry = (object: any): NewPatient => {
   return {
     name: parseName(object.name),
     dateOfBirth: parseDate(object.dateOfBirth),
@@ -62,5 +65,3 @@ const toNewPatientEntry = (object: any): NewPatient => {
     occupation: parseOccupation(object.occupation),
   };
 };
-
-export default toNewPatientEntry;
