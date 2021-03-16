@@ -10,17 +10,6 @@ const getEntries = (): NonSensitivePatient[] => {
   );
 };
 
-const getSingleEntry = (id: string): Patient => {
-  const result = patients.find((patient) => patient.id === id);
-
-  if (result === undefined) {
-    throw new TypeError("No person found");
-  }
-
-  const resultEntries = { ...result, entries: [] };
-  return resultEntries;
-};
-
 const addPatient = (patient: NewPatient): Patient => {
   const newPatient = {
     ...patient,
@@ -30,6 +19,11 @@ const addPatient = (patient: NewPatient): Patient => {
 
   patients.push(newPatient);
   return newPatient;
+};
+
+const getSingleEntry = (id: any): Patient | undefined => {
+  const patient = patients.find((p) => p.id === id);
+  return patient;
 };
 
 export default {
