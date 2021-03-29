@@ -3,10 +3,11 @@ import axios from "axios";
 import { Container, Icon } from "semantic-ui-react";
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
-import { Patient, Entry } from "../types";
+import { Patient } from "../types";
 import { useStateValue, updatePatient } from "../state";
 import { toNewPatientEntry } from "../utils";
 import { InvalidPatientError } from "../errorHandler/error";
+import EntryDetails from "../PatientListPage/EntryDetails";
 
 const getGenderIcon = {
   male: "mars" as "mars",
@@ -15,8 +16,8 @@ const getGenderIcon = {
 };
 
 const PatientPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
   const [{ patients }, dispatch] = useStateValue();
+  const { id } = useParams<{ id: string }>();
   const fetchStatus = useRef({ shouldFetch: false, hasFetched: false });
   let patient = { ...patients[id] };
 
@@ -32,79 +33,26 @@ const PatientPage: React.FC = () => {
 
   useEffect(() => {
     const fetchPatient = async () => {
-      fetchStatus.current = { ...fetchStatus.current, shouldFetch: false };
       try {
-        const { data: patientFromApi } = await axios.get<Patient>(
-          `${apiBaseUrl}/patients/${id}`
-        );
-        dispatch(updatePatient(patientFromApi));
-        fetchStatus.current = { ...fetchStatus.current, hasFetched: true };
+        if (patient && !patient["ssn"]) {
+          const { data: patientFromApi } = await axios.get<Patient>(
+            `${apiBaseUrl}/patients/${patient.id}`
+          );
+          dispatch(updatePatient(patientFromApi));
+        }
       } catch (e) {
         console.error(e);
       }
     };
+    fetchPatient();
+  }, [dispatch, patient]);
 
-    if (fetchStatus.current.shouldFetch) {
-      fetchPatient();
-    }
-  }, [dispatch, id]);
+  if (!patient || !patient["ssn"])
+    return <div>Loading patient information...</div>;
 
-  interface EntryProps {
-    entry: Entry;
+  if (!patient) {
+    return <div>No patient found</div>;
   }
-
-  const assertNever = (value: never): never => {
-    throw new Error(
-      `Unhandled discrimitated union member: ${JSON.stringify(value)}`
-    );
-  };
-
-  const Entries: React.FC<EntryProps> = ({ entry }) => {
-    const [{ diagnosis }] = useStateValue();
-    switch (entry.type) {
-      case "HealthCheck":
-        return (
-          <div>
-            <p>
-              {entry.date} {entry.description}
-            </p>
-            <ul>
-              {entry.diagnosisCodes?.map((code) => (
-                <li key={code}>{code} {diagnosis[code].name}</li>
-              ))}
-            </ul>
-          </div>
-        );
-      case "OccupationalHealthcare":
-        return (
-          <div>
-            <p>
-              {entry.date} {entry.description}
-            </p>
-            <ul>
-              {entry.diagnosisCodes?.map((code) => (
-                <li key={code}>{code} {diagnosis[code].name}</li>
-              ))}
-            </ul>
-          </div>
-        );
-      case "Hospital":
-        return (
-          <div>
-            <p>
-              {entry.date} {entry.description}
-            </p>
-            <ul>
-              {entry.diagnosisCodes?.map((code) => (
-                <li key={code}>{code} {diagnosis[code].name}</li>
-              ))}
-            </ul>
-          </div>
-        );
-      default:
-        return assertNever(entry);
-    }
-  };
 
   return (
     <div className="App">
@@ -117,11 +65,10 @@ const PatientPage: React.FC = () => {
         <>occupation: {patient.occupation} </>
         <br></br>
         <>date of birth: {patient.dateOfBirth}</>
-        <h2>
-          <i>entries</i>
-        </h2>
+        <br></br>
+        <h3>entries</h3>
         {patient.entries?.map((entry) => (
-          <Entries key={entry.id} entry={entry} />
+          <EntryDetails key={entry.id} entry={entry} />
         ))}
       </Container>
     </div>

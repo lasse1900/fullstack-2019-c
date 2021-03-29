@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Gender, Entry, Patient } from "./types";
-import { InvalidPatientError } from "./errorHandler/error";
+import { InvalidPatientError } from "../src/errorHandler/error";
 
 const isString = (text: any): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -22,7 +22,6 @@ const parseId = (id: any): string => {
   }
   return id;
 };
-
 
 // parsing Occupation
 const parseOccupation = (occupation: any): string => {
