@@ -56,12 +56,17 @@ const isGender = (param: any): param is Gender => {
   return Object.values(Gender).includes(param);
 };
 
-export const toNewPatientEntry = (object: any): NewPatient => {
-  return {
+const toNewPatientEntry = (object: any): NewPatient => {
+  const newEntry: NewPatient = {
     name: parseName(object.name),
     dateOfBirth: parseDate(object.dateOfBirth),
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation),
+    entries: [],
   };
+
+  return newEntry;
 };
+
+export default toNewPatientEntry;
