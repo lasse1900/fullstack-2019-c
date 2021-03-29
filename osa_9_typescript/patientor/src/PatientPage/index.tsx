@@ -3,7 +3,7 @@ import axios from "axios";
 import { Container, Icon } from "semantic-ui-react";
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
-import { Patient } from "../types";
+import { Patient, Entry } from "../types";
 import { useStateValue, updatePatient } from "../state";
 import { toNewPatientEntry } from "../utils";
 import { InvalidPatientError } from "../errorHandler/error";
@@ -47,8 +47,63 @@ const PatientPage: React.FC = () => {
     if (fetchStatus.current.shouldFetch) {
       fetchPatient();
     }
-    
   }, [dispatch, id]);
+
+  interface EntryProps {
+    entry: Entry;
+  }
+
+  const assertNever = (value: never): never => {
+    throw new Error(
+      `Unhandled discrimitated union member: ${JSON.stringify(value)}`
+    );
+  };
+
+  const Entries: React.FC<EntryProps> = ({ entry }) => {
+    switch (entry.type) {
+      case "HealthCheck":
+        return (
+          <div>
+            <p>
+              {entry.date} {entry.description}
+            </p>
+            <ul>
+              {entry.diagnosisCodes?.map((code) => (
+                <li key={code}>{code}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      case "OccupationalHealthcare":
+        return (
+          <div>
+            <p>
+              {entry.date} {entry.description}
+            </p>
+            <ul>
+              {entry.diagnosisCodes?.map((code) => (
+                <li key={code}>{code}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      case "Hospital":
+        return (
+          <div>
+            <p>
+              {entry.date} {entry.description}
+            </p>
+            <ul>
+              {entry.diagnosisCodes?.map((code) => (
+                <li key={code}>{code}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      default:
+        return assertNever(entry);
+    }
+  };
 
   return (
     <div className="App">
@@ -61,6 +116,12 @@ const PatientPage: React.FC = () => {
         <>occupation: {patient.occupation} </>
         <br></br>
         <>date of birth: {patient.dateOfBirth}</>
+        <h2>
+          <i>entries</i>
+        </h2>
+        {patient.entries?.map((entry) => (
+          <Entries key={entry.id} entry={entry} />
+        ))}
       </Container>
     </div>
   );
