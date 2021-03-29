@@ -60,6 +60,7 @@ const PatientPage: React.FC = () => {
   };
 
   const Entries: React.FC<EntryProps> = ({ entry }) => {
+    const [{ diagnosis }] = useStateValue();
     switch (entry.type) {
       case "HealthCheck":
         return (
@@ -69,7 +70,7 @@ const PatientPage: React.FC = () => {
             </p>
             <ul>
               {entry.diagnosisCodes?.map((code) => (
-                <li key={code}>{code}</li>
+                <li key={code}>{code} {diagnosis[code].name}</li>
               ))}
             </ul>
           </div>
@@ -82,7 +83,7 @@ const PatientPage: React.FC = () => {
             </p>
             <ul>
               {entry.diagnosisCodes?.map((code) => (
-                <li key={code}>{code}</li>
+                <li key={code}>{code} {diagnosis[code].name}</li>
               ))}
             </ul>
           </div>
@@ -95,7 +96,7 @@ const PatientPage: React.FC = () => {
             </p>
             <ul>
               {entry.diagnosisCodes?.map((code) => (
-                <li key={code}>{code}</li>
+                <li key={code}>{code} {diagnosis[code].name}</li>
               ))}
             </ul>
           </div>
