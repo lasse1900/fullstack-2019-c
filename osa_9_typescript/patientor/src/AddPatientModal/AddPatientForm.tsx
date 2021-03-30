@@ -33,7 +33,7 @@ export const AddPatientForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         gender: Gender.Other
       }}
       onSubmit={onSubmit}
-      validate={values => {
+      validate={(values) => {
         const requiredError = "Field is required";
         const errors: { [field: string]: string } = {};
         if (!values.name) {
@@ -78,11 +78,7 @@ export const AddPatientForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               name="occupation"
               component={TextField}
             />
-            <SelectField
-              label="Gender"
-              name="gender"
-              options={genderOptions}
-            />
+            <SelectField label="Gender" name="gender" options={genderOptions} />
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">
