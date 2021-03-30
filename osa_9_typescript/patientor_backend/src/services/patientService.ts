@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 import patients from "../../data/patients";
-import { Patient, NonSensitivePatient, NewPatient } from "../types";
+import { Patient, NonSensitivePatient, NewPatient, NewEntry } from "../types";
 
 const getEntries = (): NonSensitivePatient[] => {
   return patients.map(
@@ -26,8 +26,26 @@ const addPatient = (patient: NewPatient): Patient => {
   return newPatient;
 };
 
+const addEntry = (patientId: string, entry: NewEntry): Patient => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const newEntry = {
+    id: uuid(),
+    ...entry,
+  };
+
+  const existingPatient: Patient | undefined = patients.find(
+    (p) => p.id === patientId
+  );
+  if (!existingPatient) {
+    throw new Error(`Patient with id '${patientId}' not found`);
+  }
+  existingPatient.entries.push(newEntry);
+  return existingPatient;
+};
+
 export default {
   getEntries,
   addPatient,
-  getSingleEntry
+  getSingleEntry,
+  addEntry,
 };
